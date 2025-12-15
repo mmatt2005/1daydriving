@@ -1,14 +1,22 @@
+import { CommandHandler } from './commandHandler'
 import { canvas, NUM_OF_COLS, NUM_OF_ROWS, TILE_HEIGHT, TILE_WIDTH } from './constants'
+import { EventHandler } from './eventHandler'
 import { getRoadTopLane, isNumOfRowsEven } from './helpers'
+import { Logger } from './logger'
 import { Player } from './player'
 import './style.css'
 import { Tile } from './tile'
 import { VehicleManager } from './vehicleManager'
 
+export const eventHandler = new EventHandler()
+export const commandHandler = new CommandHandler()
+export const logger = new Logger()
+
 export class Game {
     tiles: Tile[][] = []
     player: Player
     vehicleManager: VehicleManager = new VehicleManager()
+    frame: number = 0
 
     constructor() {
         // Create the base tiles
@@ -43,11 +51,14 @@ export class Game {
         }
 
         this.draw()
+        this.update()
     }
 
     loadNewPart() {
         const biomes: Tile["type"][] = ["desert", "forest", "tundra"]
         const newBiome = biomes[Math.floor(Math.random() * biomes.length)]
+
+        this.vehicleManager.despawnAllVehicles()
 
         this.tiles.flat().forEach(tile => {
             if (!tile.isTile("road")) {
@@ -55,8 +66,7 @@ export class Game {
             }
         })
 
-
-        console.log("Loading new part of the map...")
+        logger.log("Loading new part of the map...")
     }
 
     draw() {
@@ -69,10 +79,32 @@ export class Game {
         // Draw the vehicles
         this.vehicleManager.draw()
 
+        // Draw the command handler "COMMAND" ui 
+        commandHandler.draw()
+
+        // Draw the logger text
+        logger.draw()
+
         window.requestAnimationFrame(() => this.draw())
     }
 
-}
+    update() {
+        if (this.frame >= 120) {
+            this.frame = 0
+        }
 
+        this.frame++
+
+        if (this.frame >= 120) {
+            if (logger.logs.length > 0) {                
+                logger.removeOldestLog()
+            } 
+        }
+
+        this.vehicleManager.moveVehicles()
+
+        window.requestAnimationFrame(() => this.update())
+    }
+}
 
 export const game = new Game()

@@ -1,42 +1,40 @@
-import { game } from "./game"
+import { game, logger } from "./game"
 import { getRoadBottomLane } from "./helpers"
-import { Vehicle } from "./vehicle"
+import { SportsCar, Truck, Vehicle } from "./vehicle"
 
 export class VehicleManager {
     vehicles: Vehicle[] = []
 
-    constructor() {
+    moveVehicles() { 
+        this.vehicles.forEach(veh => { 
+            if (veh.isAtBorder()) { 
+                this.despawnVehicle(veh)
+                return
+            }
 
-        setTimeout(() => { 
-            this.spawnVehicle()
-        }, 2500)
+            if (veh.direction === "right") { 
+                veh.x += veh.speed
+            } else { 
+                veh.x -= veh.speed
+            }
+        })
+    
     }
 
-    spawnVehicle() {
-        const vehicle = new Vehicle()
+    spawnVehicle(type?: SportsCar | Truck) {
+        const vehicle = type || new Vehicle()
         vehicle.setPosition(
             {
                 x: 900,
                 y: getRoadBottomLane(game.tiles).y
             }
         )
-        vehicle.moveRight()
 
-
-        vehicle.onMove = () => { 
-            console.log("THE VEHICLE IS MOVING!!!")
-
-            if (vehicle.isAtBorder()) { 
-                console.log("THE VEHICLE IS AT THE BORDER")
-                this.despawnVehicle(vehicle)
-                vehicle.removeInterval()
-            }
-
-        }
         this.vehicles.push(vehicle)
     }
 
     despawnVehicle(vehicle: Vehicle) {
+        logger.log(`Despawning Vehicle: ` + vehicle.id, "yellow")
         this.vehicles = this.vehicles.filter(veh => veh.id !== vehicle.id)
     }
 

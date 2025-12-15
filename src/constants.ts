@@ -10,4 +10,5 @@ export const TILE_WIDTH = Math.ceil(canvas.width / NUM_OF_ROWS)
 export const TILE_HEIGHT = Math.round(canvas.height / NUM_OF_COLS)
 export const PLAYER_WIDTH = 100
 export const PLAYER_HEIGHT = TILE_HEIGHT / 2
-export const DEFAULT_VEHICLE_SPEED = 20 
+export const DEFAULT_VEHICLE_SPEED = 5
+export const DEFAULT_VEHICLE_WIDTH = 50
