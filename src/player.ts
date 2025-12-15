@@ -1,14 +1,17 @@
 import { canvas, context, PLAYER_HEIGHT, PLAYER_WIDTH } from "./constants"
+import { Entity } from "./entity"
 import { game } from "./game"
 
-export class Player {
-    x: number = 0
-    y: number = 0
-    width: number = PLAYER_WIDTH
-    height: number = PLAYER_HEIGHT
+export class Player extends Entity {
     color: string = "yellow"
 
     constructor() {
+        super()
+        this.width = PLAYER_WIDTH
+        this.height = PLAYER_HEIGHT
+        
+        this.setImage("hotdog.png")
+
         document.addEventListener("keydown", event => {
             switch (event.key) {
                 case "a":

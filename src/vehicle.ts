@@ -1,14 +1,17 @@
 import { canvas, context, DEFAULT_VEHICLE_SPEED, DEFAULT_VEHICLE_WIDTH, TILE_HEIGHT } from "./constants"
+import { Entity } from "./entity"
 import type { Point } from "./types"
-import { v4 as uuidv4 } from "uuid"
-export class Vehicle {
-    x: number = 0
-    y: number = 0
-    width: number = DEFAULT_VEHICLE_WIDTH
-    height: number = TILE_HEIGHT / 2
+export class Vehicle extends Entity {
     color: string = "blue"
-    id: string = uuidv4()
-    intervalController = new AbortController()
+
+    constructor() {
+        console.log("TEST?")
+        super()
+        this.width = DEFAULT_VEHICLE_WIDTH
+        this.height = TILE_HEIGHT / 2
+
+        this.setImage("hotdog.png")
+    }
 
     speed: number = DEFAULT_VEHICLE_SPEED
     direction: "left" | "right" = "right"
@@ -18,9 +21,7 @@ export class Vehicle {
         this.y = newPosition.y
     }
 
-    removeInterval() {
-        this.intervalController.abort()
-    }
+
 
     /**
      * @description checks if a vehicle is currently at or pass the edge of the map
@@ -40,19 +41,19 @@ export class Vehicle {
         return false
     }
 
-    draw() {
-        context.fillStyle = this.color
-        context.fillRect(this.x, this.y, this.width, this.height)
-    }
+    // draw() {
+    //     context.fillStyle = this.color
+    //     context.fillRect(this.x, this.y, this.width, this.height)
+    // }
 }
 
 
-export class Truck extends Vehicle { 
+export class Truck extends Vehicle {
     constructor() {
         super()
 
         this.width = 100,
-        this.speed = 0.5
+            this.speed = 0.5
     }
 }
 

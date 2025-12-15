@@ -2,15 +2,20 @@ import { CommandHandler } from './commandHandler'
 import { canvas, NUM_OF_COLS, NUM_OF_ROWS, TILE_HEIGHT, TILE_WIDTH } from './constants'
 import { EventHandler } from './eventHandler'
 import { getRoadTopLane, isNumOfRowsEven } from './helpers'
+import { ImageManager } from './imageManager'
 import { Logger } from './logger'
 import { Player } from './player'
 import './style.css'
 import { Tile } from './tile'
 import { VehicleManager } from './vehicleManager'
 
+export const logger = new Logger()
+export const imageManager = new ImageManager()
+imageManager.initialLoad()
+
+console.log("LOADING THE REST OF THE GAME!! :D")
 export const eventHandler = new EventHandler()
 export const commandHandler = new CommandHandler()
-export const logger = new Logger()
 
 export class Game {
     tiles: Tile[][] = []

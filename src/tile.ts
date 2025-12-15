@@ -1,14 +1,17 @@
 import { context, TILE_WIDTH, TILE_HEIGHT } from "./constants"
+import { Entity } from "./entity"
+import { imageManager } from "./game"
 
-export class Tile {
-    x: number
-    y: number
+export class Tile extends Entity {
     type: "road" | "forest" | "desert" | "tundra" = "forest"
     color: string = "Moccasin"
 
     constructor(x: number, y: number) {
+        super()
         this.x = x
         this.y = y
+        this.width = TILE_WIDTH
+        this.height = TILE_HEIGHT
     }
 
     setType(newType: Tile["type"]) {
@@ -47,23 +50,28 @@ export class Tile {
     }
 
     draw() {
-        context.fillStyle = this.color
-        context.fillRect(this.x, this.y, TILE_WIDTH, TILE_HEIGHT)
 
-        // DRAW BORDER
-        context.strokeStyle = "white"
-        context.lineWidth = 2
-        context.strokeRect(this.x, this.y, TILE_WIDTH, TILE_HEIGHT)
+        if (imageManager.images.length > 0) {
+            context.drawImage(imageManager.images[0].image, this.x, this.y, this.width, this.height)
+        } else {
+            context.fillStyle = this.color
+            context.fillRect(this.x, this.y, this.width, this.height)
 
-        // DRAW THE YELLOW DASHES FOR ROAD TILES ONLY!
-        if (this.type === "road") {
-            context.setLineDash([10, 10])
-            context.strokeStyle = "yellow"
-            context.beginPath()
-            context.moveTo(this.x, (this.y + (TILE_HEIGHT / 2)))
-            context.lineTo((this.x + TILE_WIDTH), (this.y + (TILE_HEIGHT / 2)))
-            context.stroke()
-            context.setLineDash([])
+            // DRAW BORDER
+            context.strokeStyle = "white"
+            context.lineWidth = 2
+            context.strokeRect(this.x, this.y, this.width, this.height)
+
+            // DRAW THE YELLOW DASHES FOR ROAD TILES ONLY!
+            if (this.type === "road") {
+                context.setLineDash([10, 10])
+                context.strokeStyle = "yellow"
+                context.beginPath()
+                context.moveTo(this.x, (this.y + (this.height / 2)))
+                context.lineTo((this.x + this.width), (this.y + (this.height / 2)))
+                context.stroke()
+                context.setLineDash([])
+            }
         }
     }
 }
