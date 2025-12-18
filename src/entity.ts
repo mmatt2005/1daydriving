@@ -1,7 +1,18 @@
-import { context } from "./constants";
+import { context, GAME_IMAGES, type GameImages } from "./constants";
 import { imageManager, logger } from "./game";
 import type { GameImage } from "./types";
-import {v4 as uuidv4} from "uuid"
+import { v4 as uuidv4 } from "uuid"
+
+
+/**
+ * @description when drawing a entity you can use these properties to help debug drawing
+ * @interface EntityDrawProperties
+ * @typedef {EntityDrawProperties}
+ */
+interface EntityDrawProperties { 
+    drawBorder?: boolean
+    borderColor?: string
+}
 
 export class Entity {
     image: GameImage | null = null
@@ -11,20 +22,24 @@ export class Entity {
     height: number = 0
     id: string = uuidv4()
 
-    setImage(name: GameImage["name"]) {
+    setImage(name: GameImages) {
         const img = imageManager.getImage(name)
         if (!img) return logger.log(`failed to set image: ${name} for entity`)
 
         this.image = img
-
-        console.log("being called?")
     }
 
-    draw() {
+    draw(options?: EntityDrawProperties) {
         if (this.image) {
             context.drawImage(this.image.image, this.x, this.y, this.width, this.height)
-        } else { 
+        } else {
             context.fillStyle = "yellow"
+        }
+
+        if (options?.drawBorder) {
+            context.strokeStyle = options.borderColor || "black"
+            context.lineWidth = 2
+            context.strokeRect(this.x, this.y, this.width, this.height)
         }
     }
 

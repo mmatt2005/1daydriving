@@ -5,7 +5,6 @@ export class Vehicle extends Entity {
     color: string = "blue"
 
     constructor() {
-        console.log("TEST?")
         super()
         this.width = DEFAULT_VEHICLE_WIDTH
         this.height = TILE_HEIGHT / 2
@@ -20,8 +19,6 @@ export class Vehicle extends Entity {
         this.x = newPosition.x
         this.y = newPosition.y
     }
-
-
 
     /**
      * @description checks if a vehicle is currently at or pass the edge of the map
@@ -41,10 +38,6 @@ export class Vehicle extends Entity {
         return false
     }
 
-    // draw() {
-    //     context.fillStyle = this.color
-    //     context.fillRect(this.x, this.y, this.width, this.height)
-    // }
 }
 
 
@@ -53,7 +46,9 @@ export class Truck extends Vehicle {
         super()
 
         this.width = 100,
-            this.speed = 0.5
+        this.speed = 0.5
+
+        this.setImage("truck.png")
     }
 }
 
@@ -63,5 +58,7 @@ export class SportsCar extends Vehicle {
 
         this.width = 25
         this.speed = 10
+
+        this.setImage("sports_race.png")
     }
 }

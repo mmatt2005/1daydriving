@@ -1,5 +1,3 @@
-import type { GameImage } from "./types"
-
 export const canvas = document.querySelector("canvas")!
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
@@ -17,27 +15,70 @@ export const DEFAULT_VEHICLE_WIDTH = 50
 
 export const IMAGE_PATH = "/images"
 
-export const GAME_IMAGES: {name: string}[] = [
-    {
-        name: "clover 1.png"
+export type GameImages = "taxi.png" | "stone 1.png" | "stone 2.png" | "station.png" |
+    "rock 1.png" | "hotdog.png" | "grass1.png" | "grass2.png" | "truck.png" | "sports_race.png" |
+    "snow 1.png" | "sand 1.png" | "pine-full01.png" | "pine-full02.png" | "cactus01.png" | "cactus02.png" |
+    "bigtree01.png" | "bigtree02.png"
+
+export const GAME_IMAGES: Record<string, { name: GameImages, spawnAbleInBiomes?: Biomes[] }> = {
+    TAXI: {
+        name: "taxi.png"
     },
-    {
-        name: "dirt 1.png"
+    STONE1: {
+        name: "stone 1.png",
     },
-    {
-        name: "grass1.png"
+    TRUCK: {
+        name: "truck.png"
     },
-    {
-        name: "rock 1.png"
+    SPORTS_RACE: {
+        name: "sports_race.png"
     },
-    {
-        name: "sand 1.png"
+    GRASS1: {
+        name: "grass1.png",
+        spawnAbleInBiomes: ["forest"]
     },
-    {
+    SNOW1: {
+        name: "snow 1.png",
+        spawnAbleInBiomes: ["tundra"]
+    },
+    SAND1: {
+        name: "sand 1.png",
+        spawnAbleInBiomes: ["desert"]
+    },
+    GRASS2: {
+        name: "grass2.png",
+        spawnAbleInBiomes: ["forest"]
+    },
+    HOTDOG: {
         name: "hotdog.png"
     },
-    {
-        name: "loading.png"
+    PINEFULL1: {
+        name: "pine-full01.png",
+        spawnAbleInBiomes: ["tundra"]
     },
+    PINEFULL2: {
+        name: "pine-full02.png",
+        spawnAbleInBiomes: ["tundra"]
+    },
+    CACTUS1: {
+        name: "cactus01.png",
+        spawnAbleInBiomes: ["desert"]
+    },
+    CACTUS2: {
+        name: "cactus02.png",
+        spawnAbleInBiomes: ["desert"]
+    },
+    BIGTREE1: {
+        name: "bigtree01.png",
+        spawnAbleInBiomes: ["forest"]
+    },
+    BIGTREE2: {
+        name: "bigtree02.png",
+        spawnAbleInBiomes: ["forest"]
+    }
+}
 
-]
+
+export type Biomes = "desert" | "forest" | "tundra"
+export const BIOMES: Biomes[] = ["desert", "forest", "tundra"]
+

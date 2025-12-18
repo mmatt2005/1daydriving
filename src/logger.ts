@@ -26,6 +26,18 @@ export class Logger {
     clearAllLogs() {
         this.logs = []
     }
+    
+    /**
+     * @description calculates the width of the black blackground based on the width of the longest log.
+     * @returns {number} 
+     */
+    private calcBackgroundWidth(): number {
+        const longestLog = this.logs.sort((a, b) => { 
+            return b.log.length - a.log.length
+        })[0]
+
+        return context.measureText(longestLog.log).width
+    }
 
     draw() {
         if (this.logs.length === 0) return 
@@ -35,7 +47,8 @@ export class Logger {
 
         const test = textSize * this.logs.length + padding
         context.fillStyle = "black"
-        context.fillRect(0, canvas.height - test, 500, test)
+
+        context.fillRect(0, canvas.height - test, this.calcBackgroundWidth(), test)
         
         this.logs.forEach((log, index) => {
             context.font = `${textSize}px arial`

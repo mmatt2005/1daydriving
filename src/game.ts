@@ -4,6 +4,7 @@ import { EventHandler } from './eventHandler'
 import { getRoadTopLane, isNumOfRowsEven } from './helpers'
 import { ImageManager } from './imageManager'
 import { Logger } from './logger'
+import { MapManager } from './mapManager'
 import { Player } from './player'
 import './style.css'
 import { Tile } from './tile'
@@ -11,9 +12,8 @@ import { VehicleManager } from './vehicleManager'
 
 export const logger = new Logger()
 export const imageManager = new ImageManager()
-imageManager.initialLoad()
+await imageManager.initialLoad()
 
-console.log("LOADING THE REST OF THE GAME!! :D")
 export const eventHandler = new EventHandler()
 export const commandHandler = new CommandHandler()
 
@@ -22,6 +22,7 @@ export class Game {
     player: Player
     vehicleManager: VehicleManager = new VehicleManager()
     frame: number = 0
+    mapManager: MapManager = new MapManager()
 
     constructor() {
         // Create the base tiles
@@ -59,27 +60,12 @@ export class Game {
         this.update()
     }
 
-    loadNewPart() {
-        const biomes: Tile["type"][] = ["desert", "forest", "tundra"]
-        const newBiome = biomes[Math.floor(Math.random() * biomes.length)]
-
-        this.vehicleManager.despawnAllVehicles()
-
-        this.tiles.flat().forEach(tile => {
-            if (!tile.isTile("road")) {
-                tile.setType(newBiome)
-            }
-        })
-
-        logger.log("Loading new part of the map...")
-    }
-
     draw() {
         // Draw the tiles
         this.tiles.flat().forEach(t => t.draw())
 
         // Draw the player
-        this.player.draw()
+        this.player.draw({drawBorder: true})
 
         // Draw the vehicles
         this.vehicleManager.draw()

@@ -1,6 +1,5 @@
-import { context, TILE_WIDTH, TILE_HEIGHT } from "./constants"
+import { TILE_HEIGHT, TILE_WIDTH } from "./constants"
 import { Entity } from "./entity"
-import { imageManager } from "./game"
 
 export class Tile extends Entity {
     type: "road" | "forest" | "desert" | "tundra" = "forest"
@@ -12,6 +11,8 @@ export class Tile extends Entity {
         this.y = y
         this.width = TILE_WIDTH
         this.height = TILE_HEIGHT
+
+        this.setImage("grass2.png")
     }
 
     setType(newType: Tile["type"]) {
@@ -30,11 +31,10 @@ export class Tile extends Entity {
                 break
             case "road":
                 this.color = "black"
+                this.setImage("stone 1.png")
                 break
         }
     }
-
-
 
     /**
      * @description checks to see a if the tile is a given tile type
@@ -47,31 +47,5 @@ export class Tile extends Entity {
 
     setColor(newColor: string) {
         this.color = newColor
-    }
-
-    draw() {
-
-        if (imageManager.images.length > 0) {
-            context.drawImage(imageManager.images[0].image, this.x, this.y, this.width, this.height)
-        } else {
-            context.fillStyle = this.color
-            context.fillRect(this.x, this.y, this.width, this.height)
-
-            // DRAW BORDER
-            context.strokeStyle = "white"
-            context.lineWidth = 2
-            context.strokeRect(this.x, this.y, this.width, this.height)
-
-            // DRAW THE YELLOW DASHES FOR ROAD TILES ONLY!
-            if (this.type === "road") {
-                context.setLineDash([10, 10])
-                context.strokeStyle = "yellow"
-                context.beginPath()
-                context.moveTo(this.x, (this.y + (this.height / 2)))
-                context.lineTo((this.x + this.width), (this.y + (this.height / 2)))
-                context.stroke()
-                context.setLineDash([])
-            }
-        }
     }
 }

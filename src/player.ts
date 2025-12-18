@@ -1,4 +1,4 @@
-import { canvas, context, PLAYER_HEIGHT, PLAYER_WIDTH } from "./constants"
+import { canvas, PLAYER_HEIGHT, PLAYER_WIDTH } from "./constants"
 import { Entity } from "./entity"
 import { game } from "./game"
 
@@ -45,17 +45,7 @@ export class Player extends Entity {
         // Check if the player is at the futherest left part of the map. If true load a new part of the map and reset the player all the way to the right
         if (this.x <= 0) {
             this.x = canvas.width - PLAYER_WIDTH
-            game.loadNewPart()
+            game.mapManager.loadNewBiome()
         }
-    }
-
-    draw() {
-        context.fillStyle = this.color
-        context.fillRect(this.x, this.y, this.width, this.height)
-
-        // DRAW BORDER
-        context.strokeStyle = "black"
-        context.lineWidth = 2
-        context.strokeRect(this.x, this.y, this.width, this.height)
     }
 }

@@ -8,7 +8,7 @@ export const COMMANDS = {
     NEW: "NEW",
     TRUCK: "TRUCK", // Spawns a truck
     SPORTS: "SPORTS", // Spawns a sports car
-    CLEARLOGS: "CLEARLOGS" // Instantly clears all logs 
+    CLEARLOGS: "CLEARLOGS", // Instantly clears all logs
 } as const
 
 export class CommandHandler extends EventHandler {
@@ -64,7 +64,7 @@ export class CommandHandler extends EventHandler {
             },
             {
                 command: COMMANDS.NEW,
-                fn: () => game.loadNewPart()
+                fn: () => game.mapManager.loadNewBiome()
             },
             {
                 command: COMMANDS.SPORTS,
@@ -77,8 +77,8 @@ export class CommandHandler extends EventHandler {
             {
                 command: COMMANDS.CLEARLOGS,
                 fn: () => logger.clearAllLogs()
-            }
-        
+            },
+    
         ]
         logger.log(`Execute the following command: ${this.formatCommand()}`)
 

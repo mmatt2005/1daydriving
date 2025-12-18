@@ -23,7 +23,6 @@ export class VehicleManager {
 
     spawnVehicle(type?: SportsCar | Truck) {
         const vehicle = type || new Vehicle()
-        vehicle.setImage("hotdog.png")
         vehicle.setPosition(
             {
                 x: 0,
