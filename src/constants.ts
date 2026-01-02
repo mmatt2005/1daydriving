@@ -1,3 +1,5 @@
+import { RockMapObject, TreeMapObject, type MapObject } from "./mapObjects/mapObject"
+
 export const canvas = document.querySelector("canvas")!
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
@@ -17,7 +19,8 @@ export const IMAGE_PATH = "/images"
 
 export type GameImages = "taxi.png" | "station.png" |
     "hotdog.png" | "truck.png" | "sports_race.png" | "grass1.png" | "grass2.png" | "grass3.png" | "grass_d1.png" |
-    "grass_d2.png" | "grass_d3.png" | "tree1.png" | "tree2.png" | "tree3.png" | "road.png"
+    "grass_d2.png" | "grass_d3.png" | "tree1.png" | "tree2.png" | "tree3.png" | "road.png" | "winter_tree_dead.png" | "winter_tree_1.png" | "winter_tree2.png" | 
+    "tumbleweed1.png" | "rock1.png" | "rock2.png" | "rock3.png" | "dead_tree.png" | "cactus1.png" | "cactus2.png" | "cactus3.png"
 
     export const GAME_IMAGES: Record<string, { name: GameImages, spawnAbleInBiomes?: Biomes[], isMapObject?: boolean }> = {
         TAXI: {
@@ -59,10 +62,26 @@ export type GameImages = "taxi.png" | "station.png" |
         },
         TREE2: {
             name: "tree2.png",
-            isMapObject: true
+            isMapObject: true,
         },
         TREE3: {
             name: "tree3.png",
+            isMapObject: true
+        },
+        ROCK1: {
+            name: "rock1.png",
+            isMapObject: true
+        }, 
+        ROCK2: {
+            name: "rock2.png",
+            isMapObject: true
+        },
+        ROCK3: { 
+            name: "rock3.png",
+            isMapObject: true
+        }, 
+        DEAD_TREE: {
+            name: "dead_tree.png",
             isMapObject: true
         },
         HOTDOG: {
@@ -76,4 +95,3 @@ export type GameImages = "taxi.png" | "station.png" |
 
 export type Biomes = "desert" | "forest" | "tundra"
 export const BIOMES: Biomes[] = ["desert", "forest", "tundra"]
-

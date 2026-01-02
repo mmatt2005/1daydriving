@@ -1,10 +1,10 @@
 import { GAME_IMAGES, NUM_OF_ROWS, type Biomes, type GameImages } from "./constants"
-import { Game } from "./game"
-import { MapObject, TreeMapObject } from "./mapObjects/mapObject"
+import { Game, logger } from "./game"
+import { MapObject, RockMapObject, TreeMapObject } from "./mapObjects/mapObject"
 
 export class MapManager {
     tiles: Game["tiles"]
-    currentBiome: Biomes = "forest"
+    currentBiome: Biomes = "tundra"
     mapObjects: MapObject[] = []
 
     constructor(tiles: Game["tiles"]) {
@@ -20,6 +20,8 @@ export class MapManager {
                     tile.setImage("road.png")
                     tile.setType("road.png")
                 } else {
+                    const test = this.selectRandomImage(availableTiles)
+                    console.log(test)
                     tile.setImage(this.selectRandomImage(availableTiles))
                 }
             })
@@ -30,17 +32,30 @@ export class MapManager {
 
     reloadMap() {
         this.removeAllMapObjects()
-
         this.addMapObjects()
     }
 
     addMapObjects() {
+        const mapObjectPerBiome: Record<Biomes, (typeof MapObject)[]> = {
+            forest: [TreeMapObject, RockMapObject],
+            desert: [],
+            tundra: [RockMapObject]
+        }
+
         this.tiles.flat().forEach(tile => {
             if (!tile.isTile("road.png")) {
                 const shouldAddMapObjectAtTile = Math.random()
 
                 if (shouldAddMapObjectAtTile >= 0.50) {
-                    const newMapObject = new TreeMapObject()
+                    const biomeObjectsArray = mapObjectPerBiome[this.currentBiome]
+
+                    if (biomeObjectsArray.length === 0) {
+                        console.log("Cant do this due to biomeObjectsArray length being 0...")
+                        return
+                    }
+
+                    const newMapObject = new mapObjectPerBiome[this.currentBiome][Math.floor(Math.random() * biomeObjectsArray.length)]
+
                     newMapObject.setPosition({ x: tile.x, y: tile.y })
                     newMapObject.width = tile.width
                     newMapObject.height = tile.height
@@ -49,8 +64,6 @@ export class MapManager {
                 }
             }
         })
-
-
     }
 
     availableMapObjectForBiome(): GameImages[] {
@@ -72,6 +85,11 @@ export class MapManager {
     }
 
     selectRandomImage(images: GameImages[]): GameImages {
+        if (images.length === 0) {
+            logger.log("Failed to selectRandomImage due to images param length being 0", "yellow")
+            return "truck.png"
+        }
+        
         return images[Math.floor(Math.random() * images.length)]
     }
 }
