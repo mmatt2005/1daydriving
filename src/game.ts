@@ -38,14 +38,7 @@ export class Game {
         this.player = player
 
         if (isNumOfRowsEven()) {
-            // Create the road tiles
-            this.tiles.forEach(col => {
-                col.forEach((tile, index) => {
-                    if (index === (NUM_OF_ROWS / 2)) {
-                        tile.setType("road")
-                    }
-                })
-            })
+            this.mapManager.createMap(this.tiles)
 
             // Set the players default position the the middle row all the way to the right
             player.setPosition(
@@ -65,7 +58,7 @@ export class Game {
         this.tiles.flat().forEach(t => t.draw())
 
         // Draw the player
-        this.player.draw({drawBorder: true})
+        this.player.draw()
 
         // Draw the vehicles
         this.vehicleManager.draw()

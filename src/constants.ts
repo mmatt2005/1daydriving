@@ -15,68 +15,63 @@ export const DEFAULT_VEHICLE_WIDTH = 50
 
 export const IMAGE_PATH = "/images"
 
-export type GameImages = "taxi.png" | "stone 1.png" | "stone 2.png" | "station.png" |
-    "rock 1.png" | "hotdog.png" | "grass1.png" | "grass2.png" | "truck.png" | "sports_race.png" |
-    "snow 1.png" | "sand 1.png" | "pine-full01.png" | "pine-full02.png" | "cactus01.png" | "cactus02.png" |
-    "bigtree01.png" | "bigtree02.png"
+export type GameImages = "taxi.png" | "station.png" |
+    "hotdog.png" | "truck.png" | "sports_race.png" | "grass1.png" | "grass2.png" | "grass3.png" | "grass_d1.png" |
+    "grass_d2.png" | "grass_d3.png" | "tree1.png" | "tree2.png" | "tree3.png" | "road.png"
 
-export const GAME_IMAGES: Record<string, { name: GameImages, spawnAbleInBiomes?: Biomes[] }> = {
-    TAXI: {
-        name: "taxi.png"
-    },
-    STONE1: {
-        name: "stone 1.png",
-    },
-    TRUCK: {
-        name: "truck.png"
-    },
-    SPORTS_RACE: {
-        name: "sports_race.png"
-    },
-    GRASS1: {
-        name: "grass1.png",
-        spawnAbleInBiomes: ["forest"]
-    },
-    SNOW1: {
-        name: "snow 1.png",
-        spawnAbleInBiomes: ["tundra"]
-    },
-    SAND1: {
-        name: "sand 1.png",
-        spawnAbleInBiomes: ["desert"]
-    },
-    GRASS2: {
-        name: "grass2.png",
-        spawnAbleInBiomes: ["forest"]
-    },
-    HOTDOG: {
-        name: "hotdog.png"
-    },
-    PINEFULL1: {
-        name: "pine-full01.png",
-        spawnAbleInBiomes: ["tundra"]
-    },
-    PINEFULL2: {
-        name: "pine-full02.png",
-        spawnAbleInBiomes: ["tundra"]
-    },
-    CACTUS1: {
-        name: "cactus01.png",
-        spawnAbleInBiomes: ["desert"]
-    },
-    CACTUS2: {
-        name: "cactus02.png",
-        spawnAbleInBiomes: ["desert"]
-    },
-    BIGTREE1: {
-        name: "bigtree01.png",
-        spawnAbleInBiomes: ["forest"]
-    },
-    BIGTREE2: {
-        name: "bigtree02.png",
-        spawnAbleInBiomes: ["forest"]
+    export const GAME_IMAGES: Record<string, { name: GameImages, spawnAbleInBiomes?: Biomes[], isDecoration?: boolean }> = {
+        TAXI: {
+            name: "taxi.png"
+        },
+        TRUCK: {
+            name: "truck.png"
+        },
+        SPORTS_RACE: {
+            name: "sports_race.png"
+        },
+        GRASS1: {
+            name: "grass1.png",
+            spawnAbleInBiomes: ["forest"]
+        },
+        GRASS2: {
+            name: "grass2.png",
+            spawnAbleInBiomes: ["forest"]
+        },
+        GRASS3: {
+            name: "grass3.png",
+            spawnAbleInBiomes: ["forest"]
+        },
+        GRASS_D1: {
+            name: "grass_d1.png",
+            spawnAbleInBiomes: ["forest"]
+        },
+        GRASS_D2: { 
+            name: "grass_d2.png",
+            spawnAbleInBiomes: ["forest"]
+        },
+        GRASS_D3: {
+            name: "grass_d3.png",
+            spawnAbleInBiomes: ["forest"]
+        },
+        TREE1: {
+            name: "tree1.png",
+            isDecoration: true
+        },
+        TREE2: {
+            name: "tree2.png",
+            isDecoration: true
+        },
+        TREE3: {
+            name: "tree3.png",
+            isDecoration: true
+        },
+        HOTDOG: {
+            name: "hotdog.png"
+        },
+        ROAD: {
+            name: "road.png"
+        }
     }
-}
 
 
 export type Biomes = "desert" | "forest" | "tundra"

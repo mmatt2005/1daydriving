@@ -11,29 +11,10 @@ export class Tile extends Entity {
         this.y = y
         this.width = TILE_WIDTH
         this.height = TILE_HEIGHT
-
-        this.setImage("grass2.png")
     }
 
     setType(newType: Tile["type"]) {
         this.type = newType
-
-        // When the type changes update the color of the tile to reflect the new type
-        switch (newType) {
-            case "forest":
-                this.color = "green"
-                break
-            case "desert":
-                this.color = "Moccasin"
-                break
-            case "tundra":
-                this.color = "blue"
-                break
-            case "road":
-                this.color = "black"
-                this.setImage("stone 1.png")
-                break
-        }
     }
 
     /**
@@ -43,9 +24,5 @@ export class Tile extends Entity {
      */
     isTile(selectedTileType: Tile["type"]): boolean {
         return this.type === selectedTileType
-    }
-
-    setColor(newColor: string) {
-        this.color = newColor
     }
 }

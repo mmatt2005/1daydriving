@@ -34,6 +34,7 @@ export class Entity {
             context.drawImage(this.image.image, this.x, this.y, this.width, this.height)
         } else {
             context.fillStyle = "yellow"
+            context.fillRect(this.x, this.y, this.width, this.height)
         }
 
         if (options?.drawBorder) {
