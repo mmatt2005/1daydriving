@@ -19,7 +19,7 @@ export type GameImages = "taxi.png" | "station.png" |
     "hotdog.png" | "truck.png" | "sports_race.png" | "grass1.png" | "grass2.png" | "grass3.png" | "grass_d1.png" |
     "grass_d2.png" | "grass_d3.png" | "tree1.png" | "tree2.png" | "tree3.png" | "road.png"
 
-    export const GAME_IMAGES: Record<string, { name: GameImages, spawnAbleInBiomes?: Biomes[], isDecoration?: boolean }> = {
+    export const GAME_IMAGES: Record<string, { name: GameImages, spawnAbleInBiomes?: Biomes[], isMapObject?: boolean }> = {
         TAXI: {
             name: "taxi.png"
         },
@@ -55,15 +55,15 @@ export type GameImages = "taxi.png" | "station.png" |
         },
         TREE1: {
             name: "tree1.png",
-            isDecoration: true
+            isMapObject: true
         },
         TREE2: {
             name: "tree2.png",
-            isDecoration: true
+            isMapObject: true
         },
         TREE3: {
             name: "tree3.png",
-            isDecoration: true
+            isMapObject: true
         },
         HOTDOG: {
             name: "hotdog.png"

@@ -45,7 +45,7 @@ export class Player extends Entity {
         // Check if the player is at the futherest left part of the map. If true load a new part of the map and reset the player all the way to the right
         if (this.x <= 0) {
             this.x = canvas.width - PLAYER_WIDTH
-            game.mapManager.loadNewBiome()
+            game.mapManager.reloadMap()
         }
     }
 }

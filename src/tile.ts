@@ -1,8 +1,8 @@
-import { TILE_HEIGHT, TILE_WIDTH } from "./constants"
+import { TILE_HEIGHT, TILE_WIDTH, type GameImages } from "./constants"
 import { Entity } from "./entity"
 
 export class Tile extends Entity {
-    type: "road" | "forest" | "desert" | "tundra" = "forest"
+    type: GameImages | "unset" = "unset"
     color: string = "Moccasin"
 
     constructor(x: number, y: number) {
