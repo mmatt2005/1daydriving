@@ -22,7 +22,7 @@ export class Game {
     player: Player
     vehicleManager: VehicleManager = new VehicleManager()
     frame: number = 0
-    mapManager: MapManager = new MapManager()
+    mapManager: MapManager
 
     constructor() {
         // Create the base tiles
@@ -34,12 +34,12 @@ export class Game {
             }
         }
 
+        this.mapManager = new MapManager(this.tiles)
+
         const player = new Player()
         this.player = player
 
         if (isNumOfRowsEven()) {
-            this.mapManager.createMap(this.tiles)
-
             // Set the players default position the the middle row all the way to the right
             player.setPosition(
                 {
@@ -56,6 +56,8 @@ export class Game {
     draw() {
         // Draw the tiles
         this.tiles.flat().forEach(t => t.draw())
+        
+        this.mapManager.mapObjects.forEach(obj => obj.draw())
 
         // Draw the player
         this.player.draw()
@@ -80,9 +82,9 @@ export class Game {
         this.frame++
 
         if (this.frame >= 120) {
-            if (logger.logs.length > 0) {                
+            if (logger.logs.length > 0) {
                 logger.removeOldestLog()
-            } 
+            }
         }
 
         this.vehicleManager.moveVehicles()

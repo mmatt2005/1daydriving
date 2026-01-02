@@ -1,6 +1,6 @@
 import { context, GAME_IMAGES, type GameImages } from "./constants";
 import { imageManager, logger } from "./game";
-import type { GameImage } from "./types";
+import type { GameImage, Point } from "./types";
 import { v4 as uuidv4 } from "uuid"
 
 
@@ -27,6 +27,11 @@ export class Entity {
         if (!img) return logger.log(`failed to set image: ${name} for entity`)
 
         this.image = img
+    }
+
+    setPosition(point: Point) { 
+        this.x = point.x
+        this.y = point.y
     }
 
     draw(options?: EntityDrawProperties) {

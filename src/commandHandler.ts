@@ -64,7 +64,7 @@ export class CommandHandler extends EventHandler {
             },
             {
                 command: COMMANDS.NEW,
-                fn: () => game.mapManager.loadNewBiome()
+                fn: () => game.mapManager.reloadMap()
             },
             {
                 command: COMMANDS.SPORTS,

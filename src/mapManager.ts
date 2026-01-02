@@ -1,80 +1,77 @@
-import { BIOMES, GAME_IMAGES, NUM_OF_ROWS, type Biomes, type GameImages } from "./constants"
-import { Game, game, logger } from "./game"
-import type { Tile } from "./tile"
-import type { GameImage } from "./types"
+import { GAME_IMAGES, NUM_OF_ROWS, type Biomes, type GameImages } from "./constants"
+import { Game } from "./game"
+import { MapObject, TreeMapObject } from "./mapObjects/mapObject"
 
 export class MapManager {
+    tiles: Game["tiles"]
     currentBiome: Biomes = "forest"
+    mapObjects: MapObject[] = []
 
-    // constructor() {
-    //     this.currentBiome = this.selectNewBiome()
-    // }
+    constructor(tiles: Game["tiles"]) {
+        this.tiles = tiles
 
-    createMap(tiles: Game["tiles"]) {
         console.log("Creating the default map...")
 
         const availableTiles = this.availableGroundTilesForBiome()
 
-        tiles.forEach(col => {
+        this.tiles.forEach(col => {
             col.forEach((tile, index) => {
                 if (index === (NUM_OF_ROWS / 2)) {
                     tile.setImage("road.png")
+                    tile.setType("road.png")
                 } else {
                     tile.setImage(this.selectRandomImage(availableTiles))
-
-                    const shouldAddDecoration = Math.random()
-
-                    if (shouldAddDecoration >= 0.50) {
-                        tile.setImage(this.selectRandomImage(this.availableDecoration()))
-                    }
-
                 }
             })
         })
 
+        this.addMapObjects()
     }
 
-    availableDecoration(): GameImages[] {
-        return Object.values(GAME_IMAGES).filter(obj => 
-            obj.isDecoration
+    reloadMap() {
+        this.removeAllMapObjects()
+
+        this.addMapObjects()
+    }
+
+    addMapObjects() {
+        this.tiles.flat().forEach(tile => {
+            if (!tile.isTile("road.png")) {
+                const shouldAddMapObjectAtTile = Math.random()
+
+                if (shouldAddMapObjectAtTile >= 0.50) {
+                    const newMapObject = new TreeMapObject()
+                    newMapObject.setPosition({ x: tile.x, y: tile.y })
+                    newMapObject.width = tile.width
+                    newMapObject.height = tile.height
+
+                    this.mapObjects.push(newMapObject)
+                }
+            }
+        })
+
+
+    }
+
+    availableMapObjectForBiome(): GameImages[] {
+        return Object.values(GAME_IMAGES).filter(obj =>
+            obj.isMapObject
         ).map(obj => obj.name)
     }
 
+    removeAllMapObjects() {
+        this.mapObjects = []
+    }
+
     availableGroundTilesForBiome(): GameImages[] {
-        const availableGroundTiles = Object.values(GAME_IMAGES).filter(obj => 
+        const availableGroundTiles = Object.values(GAME_IMAGES).filter(obj =>
             obj.spawnAbleInBiomes && obj.spawnAbleInBiomes.includes(this.currentBiome)
         ).map(img => img.name)
 
         return availableGroundTiles
     }
 
-    selectRandomImage(images: GameImages[]): GameImages { 
+    selectRandomImage(images: GameImages[]): GameImages {
         return images[Math.floor(Math.random() * images.length)]
-    }
-
-    selectNewBiome(): Biomes {
-        return BIOMES[Math.floor(Math.random() * BIOMES.length)]
-    }
-
-    loadNewBiome() {
-        const newBiome = this.selectNewBiome()
-
-
-        const selectableImages = Object.values(GAME_IMAGES).filter(obj => obj.spawnAbleInBiomes && obj.spawnAbleInBiomes.includes(newBiome))
-
-        function selectTileImage() {
-            return selectableImages[Math.floor(Math.random() * selectableImages.length)]
-        }
-
-        game.vehicleManager.despawnAllVehicles()
-
-        game.tiles.flat().forEach(tile => {
-            if (!tile.isTile("road")) {
-                // tile.setType(newBiome)
-                tile.setImage(selectTileImage().name)
-            }
-        })
-
-        logger.log("Loading new part of the map...")
     }
 }
