@@ -1,14 +1,12 @@
 import { CommandHandler } from './commandHandler'
-import { canvas, NUM_OF_COLS, NUM_OF_ROWS, TILE_HEIGHT, TILE_WIDTH } from './constants'
+import { canvas, context, NUM_OF_COLS, NUM_OF_ROWS, TILE_HEIGHT, TILE_WIDTH } from './constants'
 import { EventHandler } from './eventHandler'
-import { getRoadTopLane, isNumOfRowsEven } from './helpers'
 import { ImageManager } from './imageManager'
 import { Logger } from './logger'
-import { MapManager } from './mapManager'
+import { NewMapManager } from './new_mapManager'
 import { Player } from './player'
 import './style.css'
 import { Tile } from './tile'
-import { VehicleManager } from './vehicleManager'
 
 export const logger = new Logger()
 export const imageManager = new ImageManager()
@@ -17,12 +15,16 @@ await imageManager.initialLoad()
 export const eventHandler = new EventHandler()
 export const commandHandler = new CommandHandler()
 
+export const newMapManager = new NewMapManager()
+
+export const player = new Player()
+
+
 export class Game {
     tiles: Tile[][] = []
-    player: Player
-    vehicleManager: VehicleManager = new VehicleManager()
     frame: number = 0
-    mapManager: MapManager
+    translateX: number = 0
+    translateY: number = 0
 
     constructor() {
         // Create the base tiles
@@ -34,42 +36,34 @@ export class Game {
             }
         }
 
-        this.mapManager = new MapManager(this.tiles)
-
-        const player = new Player()
-        this.player = player
-
-        if (isNumOfRowsEven()) {
-            // Set the players default position the the middle row all the way to the right
-            player.setPosition(
-                {
-                    x: canvas.width - player.width,
-                    y: getRoadTopLane(this.tiles).y
-                }
-            )
-        }
+        const { x: centerX, y: centerY } = newMapManager.centerOfMap()
+        this.translateX = centerX
+        this.translateY = centerY
 
         this.draw()
         this.update()
     }
 
     draw() {
-        // Draw the tiles
-        this.tiles.flat().forEach(t => t.draw())
-        
-        this.mapManager.mapObjects.forEach(obj => obj.draw())
+        context.clearRect(0, 0, canvas.width, canvas.height)
+
+        context.save()
+
+        context.translate(-this.translateX, -this.translateY)
+
+        newMapManager.tiles.flat().forEach(t => t.draw({ drawBorder: true, drawCoordinates: true }))
+        newMapManager.mapEntities.forEach(entity => entity.draw())
 
         // Draw the player
-        this.player.draw()
-
-        // Draw the vehicles
-        this.vehicleManager.draw()
+        player.draw({ drawCoordinates: true, drawCoordinatesColor: "black", drawBorder: true, borderColor: "red" })
 
         // Draw the command handler "COMMAND" ui 
         commandHandler.draw()
 
         // Draw the logger text
         logger.draw()
+
+        context.restore()
 
         window.requestAnimationFrame(() => this.draw())
     }
@@ -86,8 +80,6 @@ export class Game {
                 logger.removeOldestLog()
             }
         }
-
-        this.vehicleManager.moveVehicles()
 
         window.requestAnimationFrame(() => this.update())
     }

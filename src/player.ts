@@ -1,51 +1,93 @@
-import { canvas, PLAYER_HEIGHT, PLAYER_WIDTH } from "./constants"
+import { canvas, TILE_ATLAS_COORDS } from "./constants"
 import { Entity } from "./entity"
-import { game } from "./game"
+import { game, newMapManager, player } from "./game"
+import type { Point } from "./types"
 
 export class Player extends Entity {
     color: string = "yellow"
+    movementSpeed: number = 50
 
     constructor() {
         super()
-        this.width = PLAYER_WIDTH
-        this.height = PLAYER_HEIGHT
-        
-        this.setImage("hotdog.png")
+        this.tileAtlasCoord = TILE_ATLAS_COORDS.PLAYER
+        this.width = 64
+        this.height = 64
+
+        const { x: mapCenterX, y: mapCenterY } = newMapManager.centerOfMap()
+        this.x = mapCenterX + (canvas.width / 2)
+        this.y = mapCenterY + (canvas.height / 2) - this.height
+
 
         document.addEventListener("keydown", event => {
             switch (event.key) {
-                case "a":
-                    this.moveLeft()
+                case "w": {
+                    const newPosition: Point = { x: this.x, y: this.y - this.movementSpeed }
+
+                    if (this.canMove(newPosition)) {
+                        game.translateY -= this.movementSpeed
+                        this.setPosition(newPosition)
+                    }
+
                     break
-                case "d":
-                    this.moveRight()
+                }
+                case "a": {
+                    const newPosition: Point = { x: this.x - this.movementSpeed, y: this.y }
+
+                    if (this.canMove(newPosition)) {
+                        game.translateX -= this.movementSpeed
+                        this.setPosition(newPosition)
+                    }
+
                     break
-                case "ArrowLeft":
-                    this.moveLeft()
+                }
+                case "s": {
+                    const newPosition: Point = { x: this.x, y: this.y + this.movementSpeed }
+
+                    if (this.canMove(newPosition)) {
+                        game.translateY += this.movementSpeed
+                        this.setPosition(newPosition)
+                    }
+                }
                     break
-                case "ArrowRight":
-                    this.moveRight()
+                case "d": {
+                    const newPosition: Point = { x: this.x + this.movementSpeed, y: this.y }
+
+                    if (this.canMove(newPosition)) {
+                        game.translateX += this.movementSpeed
+                        this.setPosition(newPosition)
+                    }
+
                     break
+                }
             }
         })
     }
 
-    moveLeft() {
-        this.setPosition({ x: this.x - 10, y: this.y })
+
+    /**
+     * @description checks if the player can move to a position.
+     *
+     * @param {Point} requestedPosition 
+     * @returns {boolean} 
+     */
+    canMove(requestedPosition: Point): boolean {
+        // Is the requestedPosition still on the map?
+        if (
+            requestedPosition.x + player.width / 2 < 0
+            ||
+            requestedPosition.y + player.height < 0
+        ) return false
+        if (
+            requestedPosition.x - player.width / 2 > newMapManager.maxX
+            ||
+            requestedPosition.y - player.height / 2 > newMapManager.maxY
+        ) return false
+
+        return true
     }
 
-    moveRight() {
-        this.setPosition({ x: this.x + 10, y: this.y })
-    }
-
-    setPosition(newPosition: { x: number, y: number }) {
+    setPosition(newPosition: Point) {
         this.x = newPosition.x
         this.y = newPosition.y
-
-        // Check if the player is at the futherest left part of the map. If true load a new part of the map and reset the player all the way to the right
-        if (this.x <= 0) {
-            this.x = canvas.width - PLAYER_WIDTH
-            game.mapManager.reloadMap()
-        }
     }
 }

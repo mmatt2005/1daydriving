@@ -1,14 +1,12 @@
 import { context } from "./constants";
 import { EventHandler } from "./eventHandler";
-import { game, logger } from "./game";
-import { SportsCar, Truck } from "./vehicle";
+import { logger } from "./game";
 
 export const COMMANDS = {
-    CAR: "CAR", // Spawns a default car
     NEW: "NEW",
-    TRUCK: "TRUCK", // Spawns a truck
-    SPORTS: "SPORTS", // Spawns a sports car
     CLEARLOGS: "CLEARLOGS", // Instantly clears all logs
+    LEFT: "LEFT",
+    RIGHT: "RIGHT"
 } as const
 
 export class CommandHandler extends EventHandler {
@@ -59,26 +57,10 @@ export class CommandHandler extends EventHandler {
     executeCommand() {
         const commandFunctions: { command: string, fn: () => void }[] = [
             {
-                command: COMMANDS.CAR,
-                fn: () => game.vehicleManager.spawnVehicle()
-            },
-            {
-                command: COMMANDS.NEW,
-                fn: () => game.mapManager.reloadMap()
-            },
-            {
-                command: COMMANDS.SPORTS,
-                fn: () => game.vehicleManager.spawnVehicle(new SportsCar())
-            },
-            {
-                command: COMMANDS.TRUCK,
-                fn: () => game.vehicleManager.spawnVehicle(new Truck())
-            },
-            {
                 command: COMMANDS.CLEARLOGS,
                 fn: () => logger.clearAllLogs()
             },
-    
+
         ]
         logger.log(`Execute the following command: ${this.formatCommand()}`)
 
