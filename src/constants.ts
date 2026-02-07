@@ -8,17 +8,12 @@ export const TILE_WIDTH = 64
 export const TILE_HEIGHT = 64
 export const NUM_OF_COLS = Math.round(canvas.width / TILE_WIDTH)
 export const NUM_OF_ROWS = Math.ceil(canvas.height / TILE_HEIGHT)
-export const DEFAULT_VEHICLE_SPEED = 5
-export const DEFAULT_VEHICLE_WIDTH = 50
-
 export const IMAGE_PATH = "/images"
-
 
 export interface TileAtlasCoord {
     x: number
     y: number
 }
-
 
 export const TILE_ATLAS_COORDS = {
     GRASS_DETAILED: {
@@ -57,6 +52,28 @@ export const TILE_ATLAS_COORDS = {
 
 } satisfies Record<string, TileAtlasCoord>
 
+export interface BiomeObject { 
+    /**
+     * @description all the ground tiles that can be spawned in the biome
+     * @type {TileAtlasCoord[]}
+     */
+    groundTiles: TileAtlasCoord[],
+    /**
+     * @description all the entities (tree, cactus) that can be spawned in the biome
+     * @type {TileAtlasCoord[]}
+     */
+    entityTiles: TileAtlasCoord[]
+}
 
-export type Biomes = "desert" | "forest" | "tundra"
-export const BIOMES: Biomes[] = ["desert", "forest", "tundra"]
+export type BiomeTypes = "forest" | "desert"
+
+export const BIOMES = {
+    forest: {
+        groundTiles: [TILE_ATLAS_COORDS.GRASS, TILE_ATLAS_COORDS.GRASS_DETAILED],
+        entityTiles: [TILE_ATLAS_COORDS.TREE]
+    },
+    desert: { 
+        groundTiles: [TILE_ATLAS_COORDS.SAND, TILE_ATLAS_COORDS.SAND_DETAILED],
+        entityTiles: [TILE_ATLAS_COORDS.CACTUS]
+    }
+} satisfies Record<BiomeTypes, BiomeObject>

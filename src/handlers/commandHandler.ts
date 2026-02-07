@@ -1,12 +1,9 @@
-import { context } from "./constants";
-import { EventHandler } from "./eventHandler";
-import { logger } from "./game";
+import { context } from "../constants"
+import { logger } from "../game"
+import { EventHandler } from "./eventHandler"
 
 export const COMMANDS = {
-    NEW: "NEW",
     CLEARLOGS: "CLEARLOGS", // Instantly clears all logs
-    LEFT: "LEFT",
-    RIGHT: "RIGHT"
 } as const
 
 export class CommandHandler extends EventHandler {

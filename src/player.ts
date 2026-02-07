@@ -1,6 +1,6 @@
 import { canvas, TILE_ATLAS_COORDS } from "./constants"
-import { Entity } from "./entity"
-import { game, newMapManager, player } from "./game"
+import { game, mapManager, player } from "./game"
+import { Entity } from "./map/entity"
 import type { Point } from "./types"
 
 export class Player extends Entity {
@@ -13,7 +13,7 @@ export class Player extends Entity {
         this.width = 64
         this.height = 64
 
-        const { x: mapCenterX, y: mapCenterY } = newMapManager.centerOfMap()
+        const { x: mapCenterX, y: mapCenterY } = mapManager.centerOfMap()
         this.x = mapCenterX + (canvas.width / 2)
         this.y = mapCenterY + (canvas.height / 2) - this.height
 
@@ -78,9 +78,9 @@ export class Player extends Entity {
             requestedPosition.y + player.height < 0
         ) return false
         if (
-            requestedPosition.x - player.width / 2 > newMapManager.maxX
+            requestedPosition.x - player.width / 2 > mapManager.maxX
             ||
-            requestedPosition.y - player.height / 2 > newMapManager.maxY
+            requestedPosition.y - player.height / 2 > mapManager.maxY
         ) return false
 
         return true

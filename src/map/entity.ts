@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import { context, TILE_ATLAS_COORDS, TILE_HEIGHT, TILE_WIDTH, type TileAtlasCoord } from "./constants";
-import { imageManager } from "./game";
-import type { Point } from "./types";
+import { type TileAtlasCoord, TILE_ATLAS_COORDS, context, TILE_WIDTH, TILE_HEIGHT } from "../constants";
+import { imageManager } from "../game";
+import type { Point } from "../types";
 
 
 /**

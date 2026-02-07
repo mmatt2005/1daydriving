@@ -1,4 +1,4 @@
-import { canvas, context, TILE_HEIGHT, TILE_WIDTH } from "./constants"
+import { canvas, context, TILE_HEIGHT, TILE_WIDTH } from "../constants"
 import { Entity } from "./entity"
 
 export class Tile extends Entity {

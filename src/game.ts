@@ -1,12 +1,12 @@
-import { CommandHandler } from './commandHandler'
 import { canvas, context, NUM_OF_COLS, NUM_OF_ROWS, TILE_HEIGHT, TILE_WIDTH } from './constants'
-import { EventHandler } from './eventHandler'
-import { ImageManager } from './imageManager'
+import { CommandHandler } from './handlers/commandHandler'
+import { EventHandler } from './handlers/eventHandler'
 import { Logger } from './logger'
-import { NewMapManager } from './new_mapManager'
 import { Player } from './player'
 import './style.css'
-import { Tile } from './tile'
+import { Tile } from './map/tile'
+import { ImageManager } from './imageManager'
+import { MapManager } from './map/mapManager'
 
 export const logger = new Logger()
 export const imageManager = new ImageManager()
@@ -14,9 +14,7 @@ await imageManager.initialLoad()
 
 export const eventHandler = new EventHandler()
 export const commandHandler = new CommandHandler()
-
-export const newMapManager = new NewMapManager()
-
+export const mapManager = new MapManager()
 export const player = new Player()
 
 
@@ -36,7 +34,7 @@ export class Game {
             }
         }
 
-        const { x: centerX, y: centerY } = newMapManager.centerOfMap()
+        const { x: centerX, y: centerY } = mapManager.centerOfMap()
         this.translateX = centerX
         this.translateY = centerY
 
@@ -46,22 +44,15 @@ export class Game {
 
     draw() {
         context.clearRect(0, 0, canvas.width, canvas.height)
-
         context.save()
-
         context.translate(-this.translateX, -this.translateY)
 
-        newMapManager.tiles.flat().forEach(t => t.draw({ drawBorder: true, drawCoordinates: true }))
-        newMapManager.mapEntities.forEach(entity => entity.draw())
+        // Draw the map
+        mapManager.tiles.flat().forEach(t => t.draw({ drawBorder: true, drawCoordinates: true }))
+        mapManager.mapEntities.forEach(entity => entity.draw())
 
         // Draw the player
         player.draw({ drawCoordinates: true, drawCoordinatesColor: "black", drawBorder: true, borderColor: "red" })
-
-        // Draw the command handler "COMMAND" ui 
-        commandHandler.draw()
-
-        // Draw the logger text
-        logger.draw()
 
         context.restore()
 
@@ -69,6 +60,12 @@ export class Game {
     }
 
     update() {
+        // Draw the command handler "COMMAND" ui 
+        commandHandler.draw()
+
+        // Draw the logger text
+        logger.draw()
+
         if (this.frame >= 120) {
             this.frame = 0
         }
