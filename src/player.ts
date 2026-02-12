@@ -1,11 +1,12 @@
 import { canvas, TILE_ATLAS_COORDS } from "./constants"
-import { game, mapManager, player } from "./game"
+import { eventHandler, game, mapManager, player } from "./game"
 import { Entity } from "./map/entity"
+import { Bullet } from "./shooting/bullet"
 import type { Point } from "./types"
 
 export class Player extends Entity {
     color: string = "yellow"
-    movementSpeed: number = 50
+    movementSpeed: number = 10
 
     constructor() {
         super()
@@ -16,6 +17,8 @@ export class Player extends Entity {
         const { x: mapCenterX, y: mapCenterY } = mapManager.centerOfMap()
         this.x = mapCenterX + (canvas.width / 2)
         this.y = mapCenterY + (canvas.height / 2) - this.height
+
+        eventHandler.subscribe({ fn: this.shoot, type: "mouseClick" })
 
 
         document.addEventListener("keydown", event => {
@@ -83,6 +86,9 @@ export class Player extends Entity {
             requestedPosition.y - player.height / 2 > mapManager.maxY
         ) return false
 
+        // Check if the player will be colliding with any entities @ this new position
+        if (this.isCollidingWithEntity(requestedPosition)) return false
+
         return true
     }
 
@@ -90,4 +96,51 @@ export class Player extends Entity {
         this.x = newPosition.x
         this.y = newPosition.y
     }
+
+    shoot(event: PointerEvent) {
+        console.log("SHOOT!")
+        console.log(event)
+
+        const bullet = new Bullet()
+        bullet.setPosition({ x: player.x, y: player.y - player.height })
+
+        game.gameEntities.push(bullet)
+    }
+
+
+    /**
+     * @description checks if the player is colliding with a entity with collisions
+     * @param {?Point} [beforePoint] a certain point to check if the player would be colliding with a entity. If unused will just default to players x & y pos
+     * @returns {boolean} 
+     */
+    isCollidingWithEntity(beforePoint?: Point): boolean {
+        const playerX = beforePoint?.x || player.x
+        const playerY = beforePoint?.y || player.y
+
+        const entitiesWithCollisions = mapManager.mapEntities.filter(entity => entity.tileAtlasCoord.collisions)
+
+        const closestEntity = entitiesWithCollisions.sort((objectA, objectB) => {
+            const objectADistance = Math.sqrt(Math.pow(playerX - objectA.x, 2) + Math.pow(playerY - objectA.y, 2))
+            const objectBDistance = Math.sqrt(Math.pow(playerX - objectB.x, 2) + Math.pow(playerY - objectB.y, 2))
+
+            if (objectADistance < objectBDistance) return -1
+            return 0
+
+        })[0]
+
+        // The case where for some reason closestEntity is undefined
+        if (!closestEntity) return false
+
+
+        // Use Axis-Aligned Bounding Box (AABB) collision detection. 
+        if (
+            closestEntity.x < playerX + player.width &&
+            closestEntity.x + closestEntity.width > playerX &&
+            closestEntity.y < playerY + player.height &&
+            closestEntity.y + closestEntity.height > playerY
+        ) return true
+
+        return false
+    }
+
 }

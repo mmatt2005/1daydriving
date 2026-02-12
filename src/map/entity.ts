@@ -15,14 +15,15 @@ interface EntityDrawProperties {
     fillColor?: string
     drawCoordinates?: boolean
     drawCoordinatesColor?: string
+    drawCollisionBox?: boolean
 }
 
 export class Entity {
     tileAtlasCoord: TileAtlasCoord = TILE_ATLAS_COORDS.DEV
     x: number = 0
     y: number = 0
-    width: number = 0
-    height: number = 0
+    width: number = 64
+    height: number = 64
     id: string = uuidv4()
     color: string = "blue"
 
@@ -35,11 +36,25 @@ export class Entity {
         this.y = point.y
     }
 
+    /**
+     * @description sets the entities width & height
+     * @param {number} width 
+     * @param {number} height 
+     */
+    setDimensions(width: number, height: number) {
+        this.width = width
+        this.height = height
+    }
+
     draw(options?: EntityDrawProperties) {
+
+        const entityWidth = this.tileAtlasCoord.width || TILE_WIDTH
+        const entityHeight = this.tileAtlasCoord.height || TILE_HEIGHT
+
         context.drawImage(
             imageManager.getTileSheet()!.image,
             this.tileAtlasCoord.x * TILE_WIDTH, this.tileAtlasCoord.y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, // Crop from the tilesheet
-            this.x, this.y, TILE_WIDTH, TILE_HEIGHT // Draw to the canvas
+            this.x, this.y, entityWidth, entityHeight // Draw to the canvas
 
         )
 
@@ -54,6 +69,12 @@ export class Entity {
             context.font = "10px arial"
             context.fillStyle = options.drawCoordinatesColor ? options.drawCoordinatesColor : "red"
             context.fillText(`(${this.x}, ${this.y})`, this.x + 5, this.y + this.height - 10)
+        }
+
+        if (options?.drawCollisionBox && this.tileAtlasCoord.collisions) { 
+            context.strokeStyle = options.borderColor || "black"
+            context.lineWidth = 2
+            context.strokeRect(this.x, this.y, this.width, this.height)
         }
     }
 

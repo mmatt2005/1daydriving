@@ -7,6 +7,8 @@ import './style.css'
 import { Tile } from './map/tile'
 import { ImageManager } from './imageManager'
 import { MapManager } from './map/mapManager'
+import { Mouse } from './handlers/mouse'
+import { Entity } from './map/entity'
 
 export const logger = new Logger()
 export const imageManager = new ImageManager()
@@ -16,13 +18,15 @@ export const eventHandler = new EventHandler()
 export const commandHandler = new CommandHandler()
 export const mapManager = new MapManager()
 export const player = new Player()
-
+export const mouse = new Mouse()
 
 export class Game {
     tiles: Tile[][] = []
     frame: number = 0
     translateX: number = 0
     translateY: number = 0
+    debugMode: boolean = true
+    gameEntities: Entity[] = []
 
     constructor() {
         // Create the base tiles
@@ -48,12 +52,16 @@ export class Game {
         context.translate(-this.translateX, -this.translateY)
 
         // Draw the map
-        mapManager.tiles.flat().forEach(t => t.draw({ drawBorder: true, drawCoordinates: true }))
-        mapManager.mapEntities.forEach(entity => entity.draw())
+        mapManager.tiles.flat().forEach(t => t.draw(this.debugMode ? { drawBorder: true, drawCoordinates: true } : undefined))
+        mapManager.mapEntities.forEach(entity => entity.draw({ drawCollisionBox: true, borderColor: "blue" }))
+
+        // Draw game entities (bullets)
+        this.gameEntities.forEach(entity => entity.draw({drawBorder: true, borderColor: "green"}))
 
         // Draw the player
-        player.draw({ drawCoordinates: true, drawCoordinatesColor: "black", drawBorder: true, borderColor: "red" })
+        player.draw(this.debugMode ? { drawCoordinates: true, drawCoordinatesColor: "black", drawBorder: true, borderColor: "red" } : undefined)
 
+        mouse.drawLine(this.translateX, this.translateY)
         context.restore()
 
         window.requestAnimationFrame(() => this.draw())
