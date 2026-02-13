@@ -1,3 +1,5 @@
+import type { TileSheets } from "./imageManager"
+
 export const canvas = document.querySelector("canvas")!
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
@@ -11,99 +13,122 @@ export const NUM_OF_ROWS = Math.ceil(canvas.height / TILE_HEIGHT)
 export const IMAGE_PATH = "/images"
 
 
-export interface TileAtlasCoord {
+export interface Asset {
     x: number
     y: number
+    tilesheet: TileSheets
     collisions?: boolean
-
-    /*
-    By default all tiles are 64x64 but for certain tiles (bullets) we need a custom x and y so that what these attributes are for!
-    */
-    width?: number
-    height?: number
 }
 
-export const TILE_ATLAS_COORDS = {
+const ASSETS_16 = {
+    BULLET: {
+        x: 0,
+        y: 0,
+        tilesheet: "tilesheet16.png"
+    }
+
+} satisfies Record<string, Asset>
+
+const ASSETS_64 = {
     GRASS_DETAILED: {
         x: 0,
         y: 1,
+        tilesheet: "tilesheet_64x64.png",
     },
     GRASS: {
         x: 0,
         y: 0,
+        tilesheet: "tilesheet_64x64.png",
+
     },
     SAND_DETAILED: {
         x: 1,
         y: 1,
+        tilesheet: "tilesheet_64x64.png",
+
     },
     SAND: {
         x: 1,
         y: 0,
+        tilesheet: "tilesheet_64x64.png",
+
     },
     PLAYER: {
         x: 0,
         y: 2,
+        tilesheet: "tilesheet_64x64.png",
+
     },
     DEV: {
         x: 1,
         y: 2,
+        tilesheet: "tilesheet_64x64.png",
+
     },
     CACTUS: {
         x: 0,
         y: 3,
-        collisions: true
+        collisions: true,
+        tilesheet: "tilesheet_64x64.png",
+
     },
     TREE: {
         x: 1,
         y: 3,
-        collisions: true
+        collisions: true,
+        tilesheet: "tilesheet_64x64.png",
+
     },
     ROCKS: {
         x: 0,
         y: 4,
+        tilesheet: "tilesheet_64x64.png",
+
     },
     LARGE_ROCK: {
         x: 1,
         y: 4,
-        collisions: true
+        collisions: true,
+        tilesheet: "tilesheet_64x64.png",
+
     },
     ROSE: {
         x: 2,
         y: 4,
-        collisions: true
+        collisions: true,
+        tilesheet: "tilesheet_64x64.png",
+
     },
-    BULLET: {
-        x: 2,
-        y: 3,
-        width: 32,
-        height: 32
-    }
+} satisfies Record<string, Asset>
 
 
-} satisfies Record<string, TileAtlasCoord>
+export const ASSETS = {
+    ...ASSETS_16,
+    ...ASSETS_64
+} satisfies Record<string, Asset>
 
 export interface BiomeObject {
     /**
      * @description all the ground tiles that can be spawned in the biome
-     * @type {TileAtlasCoord[]}
+     * @type {Asset[]}
      */
-    groundTiles: TileAtlasCoord[],
+    groundTiles: Asset[],
     /**
      * @description all the entities (tree, cactus) that can be spawned in the biome
-     * @type {TileAtlasCoord[]}
+     * @type {Asset[]}
      */
-    entityTiles: TileAtlasCoord[]
+    entityTiles: Asset[]
 }
 
 export type BiomeTypes = "forest" | "desert"
 
 export const BIOMES = {
     forest: {
-        groundTiles: [TILE_ATLAS_COORDS.GRASS, TILE_ATLAS_COORDS.GRASS_DETAILED],
-        entityTiles: [TILE_ATLAS_COORDS.TREE, TILE_ATLAS_COORDS.ROCKS, TILE_ATLAS_COORDS.LARGE_ROCK, TILE_ATLAS_COORDS.ROSE]
+        groundTiles: [ASSETS.GRASS, ASSETS.GRASS_DETAILED],
+        entityTiles: [ASSETS.TREE, ASSETS.ROCKS, ASSETS.LARGE_ROCK, ASSETS.ROSE]
     },
     desert: {
-        groundTiles: [TILE_ATLAS_COORDS.SAND, TILE_ATLAS_COORDS.SAND_DETAILED],
-        entityTiles: [TILE_ATLAS_COORDS.CACTUS]
+        groundTiles: [ASSETS.SAND, ASSETS.SAND_DETAILED],
+        entityTiles: [ASSETS.CACTUS]
     }
 } satisfies Record<BiomeTypes, BiomeObject>

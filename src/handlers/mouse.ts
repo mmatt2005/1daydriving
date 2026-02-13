@@ -28,7 +28,7 @@ export class Mouse {
     drawLine(translateX: number, translateY: number) {
         context.strokeStyle = "white"
         context.beginPath()
-        context.moveTo(player.x + (player.width / 2), player.y + (player.height / 2))
+        context.moveTo(player.x + (player.getWidth() / 2), player.y + (player.getHeight() / 2))
         context.lineTo(this.mouseX + translateX, this.mouseY + translateY)
         context.stroke()
     }

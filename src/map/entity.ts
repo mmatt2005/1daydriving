@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { type TileAtlasCoord, TILE_ATLAS_COORDS, context, TILE_WIDTH, TILE_HEIGHT } from "../constants";
+import { type Asset, ASSETS, context, TILE_WIDTH, TILE_HEIGHT } from "../constants";
 import { imageManager } from "../game";
 import type { Point } from "../types";
 
@@ -19,11 +19,9 @@ interface EntityDrawProperties {
 }
 
 export class Entity {
-    tileAtlasCoord: TileAtlasCoord = TILE_ATLAS_COORDS.DEV
+    tileAtlasCoord: Asset = ASSETS.DEV
     x: number = 0
     y: number = 0
-    width: number = 64
-    height: number = 64
     id: string = uuidv4()
     color: string = "blue"
 
@@ -36,45 +34,60 @@ export class Entity {
         this.y = point.y
     }
 
-    /**
-     * @description sets the entities width & height
-     * @param {number} width 
-     * @param {number} height 
-     */
-    setDimensions(width: number, height: number) {
-        this.width = width
-        this.height = height
+
+    getEntityAssetDimensions(): { width: number, height: number } {
+        const assetTilesheet = this.tileAtlasCoord.tilesheet
+
+        if (assetTilesheet === "tilesheet16.png") {
+            return { width: 16, height: 16 }
+        } else if (assetTilesheet === "tilesheet_64x64.png") {
+            return { width: 64, height: 64 }
+        } else {
+            console.log("Failed to getEntityAssetDimensions...")
+            return { width: 0, height: 0 }
+        }
+    }
+
+    getWidth(): number {
+        const dimensions = this.getEntityAssetDimensions()
+
+        return dimensions.width
+    }
+
+    getHeight(): number {
+        const dimensions = this.getEntityAssetDimensions()
+
+        return dimensions.height
     }
 
     draw(options?: EntityDrawProperties) {
+        const { width, height } = this.getEntityAssetDimensions()
 
-        const entityWidth = this.tileAtlasCoord.width || TILE_WIDTH
-        const entityHeight = this.tileAtlasCoord.height || TILE_HEIGHT
 
         context.drawImage(
             imageManager.getTileSheet()!.image,
-            this.tileAtlasCoord.x * TILE_WIDTH, this.tileAtlasCoord.y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, // Crop from the tilesheet
-            this.x, this.y, entityWidth, entityHeight // Draw to the canvas
+            this.tileAtlasCoord.x * width, this.tileAtlasCoord.y * height, width, height, // Crop from the tilesheet
+            this.x, this.y, width, height // Draw to the canvas
 
         )
 
         if (options?.drawBorder) {
             context.strokeStyle = options.borderColor || "black"
             context.lineWidth = 2
-            context.strokeRect(this.x, this.y, this.width, this.height)
+            context.strokeRect(this.x, this.y, width, height)
         }
 
         if (options?.drawCoordinates) {
             // Draw the (x, y) of the entity
             context.font = "10px arial"
             context.fillStyle = options.drawCoordinatesColor ? options.drawCoordinatesColor : "red"
-            context.fillText(`(${this.x}, ${this.y})`, this.x + 5, this.y + this.height - 10)
+            context.fillText(`(${this.x}, ${this.y})`, this.x + 5, this.y + height - 10)
         }
 
-        if (options?.drawCollisionBox && this.tileAtlasCoord.collisions) { 
+        if (options?.drawCollisionBox && this.tileAtlasCoord.collisions) {
             context.strokeStyle = options.borderColor || "black"
             context.lineWidth = 2
-            context.strokeRect(this.x, this.y, this.width, this.height)
+            context.strokeRect(this.x, this.y, width, height)
         }
     }
 

@@ -1,11 +1,12 @@
-import { TILE_ATLAS_COORDS } from "../constants"
+import { ASSETS } from "../constants"
 import { Entity } from "../map/entity"
 
 export class Bullet extends Entity {
     constructor() {
         super()
-        this.tileAtlasCoord = TILE_ATLAS_COORDS.BULLET
+        this.tileAtlasCoord = ASSETS.BULLET
+     
         
-        this.setDimensions(32, 32)
+        console.log(this.getEntityAssetDimensions())
     }
 }

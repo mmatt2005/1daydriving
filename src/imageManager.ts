@@ -2,6 +2,10 @@ import { IMAGE_PATH, } from "./constants"
 import { logger } from "./game"
 import type { GameImage } from "./types"
 
+export type TileSheets = "tilesheet_64x64.png" | "tilesheet16.png"
+
+
+
 export class ImageManager {
     images: GameImage[] = []
 
@@ -11,7 +15,9 @@ export class ImageManager {
     async initialLoad() {
         const start = performance.now()
 
-        await Promise.all(Object.values(["tilesheet_64x64.png"]).map(val => this.loadTileSheet(val)))
+        const tilesheetsToLoad: TileSheets[] = ["tilesheet_64x64.png", "tilesheet16.png"]
+
+        await Promise.all(Object.values(tilesheetsToLoad).map(val => this.loadTileSheet(val)))
         const loadTime = ((performance.now() - start) / 1000).toFixed(3)
 
         logger.log(`Loaded ${this.images.length} images in ${loadTime}s`, "green")

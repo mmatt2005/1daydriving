@@ -1,4 +1,4 @@
-import { canvas, TILE_ATLAS_COORDS } from "./constants"
+import { canvas, ASSETS } from "./constants"
 import { eventHandler, game, mapManager, player } from "./game"
 import { Entity } from "./map/entity"
 import { Bullet } from "./shooting/bullet"
@@ -10,13 +10,12 @@ export class Player extends Entity {
 
     constructor() {
         super()
-        this.tileAtlasCoord = TILE_ATLAS_COORDS.PLAYER
-        this.width = 64
-        this.height = 64
+        this.tileAtlasCoord = ASSETS.PLAYER
+
 
         const { x: mapCenterX, y: mapCenterY } = mapManager.centerOfMap()
         this.x = mapCenterX + (canvas.width / 2)
-        this.y = mapCenterY + (canvas.height / 2) - this.height
+        this.y = mapCenterY + (canvas.height / 2) - this.getHeight()
 
         eventHandler.subscribe({ fn: this.shoot, type: "mouseClick" })
 
@@ -76,14 +75,14 @@ export class Player extends Entity {
     canMove(requestedPosition: Point): boolean {
         // Is the requestedPosition still on the map?
         if (
-            requestedPosition.x + player.width / 2 < 0
+            requestedPosition.x + player.getWidth() / 2 < 0
             ||
-            requestedPosition.y + player.height < 0
+            requestedPosition.y + player.getHeight() < 0
         ) return false
         if (
-            requestedPosition.x - player.width / 2 > mapManager.maxX
+            requestedPosition.x - player.getWidth() / 2 > mapManager.maxX
             ||
-            requestedPosition.y - player.height / 2 > mapManager.maxY
+            requestedPosition.y - player.getHeight() / 2 > mapManager.maxY
         ) return false
 
         // Check if the player will be colliding with any entities @ this new position
@@ -102,7 +101,7 @@ export class Player extends Entity {
         console.log(event)
 
         const bullet = new Bullet()
-        bullet.setPosition({ x: player.x, y: player.y - player.height })
+        bullet.setPosition({ x: player.x, y: player.y - player.getHeight() })
 
         game.gameEntities.push(bullet)
     }
@@ -134,10 +133,10 @@ export class Player extends Entity {
 
         // Use Axis-Aligned Bounding Box (AABB) collision detection. 
         if (
-            closestEntity.x < playerX + player.width &&
-            closestEntity.x + closestEntity.width > playerX &&
-            closestEntity.y < playerY + player.height &&
-            closestEntity.y + closestEntity.height > playerY
+            closestEntity.x < playerX + player.getWidth() &&
+            closestEntity.x + closestEntity.getWidth() > playerX &&
+            closestEntity.y < playerY + player.getHeight() &&
+            closestEntity.y + closestEntity.getHeight() > playerY
         ) return true
 
         return false
